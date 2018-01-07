@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Delete product";
+}
+
+@using MvcTWA.Models
+@model Product
+
+<div class="container">
+    <form action="@Url.Action("Delete")" method="post">
+        <input type="hidden" name="ProductID" value="@Model.ProductID" />
+        <label>Delete (@Model.ProductName) ?</label>
+        <label>&nbsp;</label>
+        <button class="btn btn-danger" type="submit" id="btndelete">Yes</button> |
+        <a class="btn btn-default" href="@Url.Action("Index")">
+            <i class="fa fa-backward"></i>&nbsp;Back to Product List
+        </a>
+    </form>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#btndelete").click(function () {
+                toastr.error("Product deleted!!");
+            });
+        });
+    </script>
+}
+
+
+

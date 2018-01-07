@@ -1,0 +1,88 @@
+﻿public async Task<ActionResult> Index()
+    {
+         List<Product> products = await ctx.Products.ToListAsync();
+       return View(products);
+       }
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using MvcTWA.Models
+@model List<Product>
+
+<div class="container">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Supplier</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Depot</th>
+                <th>Delete</th>
+                <th>
+                    <a class="btn btn-default btn-sm" href="@Url.Action("AddProduct")" title="Add Product">
+                        <i class="fa fa-plus-circle text-success" style="font-size:22px;"></i>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product p in Model)
+            {
+                <tr>
+                    <td><label class="label label-primary">@p.ProductName</label></td>
+                    @if (p.Supplier == null)
+                    {
+                        <td><label class="label label-danger">Not found</label></td>
+                    }
+                    else
+                    {
+                        <td>
+                            <label class="label label-success"> @p.Supplier.CompanyName</label>
+                        </td>
+                    }
+                    @if (p.Category == null)
+                    {
+                        <td><label class="label label-danger">Not found</label></td>
+                    }
+                    else
+                    {
+                        <td><label class="label label-success">@p.Category.CategoryName</label></td>
+                    }
+                    <td>
+                        <label class="label label-danger">
+                            $ @p.UnitPrice
+                        </label>
+                    </td>
+                    @if (p.Discontinued)
+                    {
+                        <td><label class="label label-danger">SOLD!!!</label></td>
+                    }
+                    else
+                    {
+                        <td><label class="label label-info"><b>... @p.UnitsInStock ...</b></label></td>
+                    }
+                    <td>
+        <a class="btn btn-default btn-xs" href="@Url.Action("Delete",new {id = p.ProductID })" title="Delete Product">
+            <i class="fa fa-remove text-danger" style="font-size:22px;"></i>
+        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            //$("tr>td").css("text-transform", "uppercase")
+            //    .css("text-align", "center");
+
+            //$("thead>tr>th").css("text-transform", "uppercase");
+        });
+    </script>
+}

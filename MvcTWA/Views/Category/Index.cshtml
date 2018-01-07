@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Add Category";
+}
+
+@using MvcTWA.Models
+@model List<Category>
+
+<div class="container">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>
+                    <a class="btn btn-default btn-sm" href="@Url.Action("AddCategory")"
+                       title="Add Category">
+                        <i class="fa fa-plus-circle text-success" style="font-size:22px;"></i>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Category p in Model)
+            {
+                using (Html.BeginForm("Delete", "Category", new { id = p.CategoryID }))
+                {
+                    <tr>
+                        <td><label class="label label-primary">@p.CategoryName</label></td>
+                        <td><label class="label label-danger">@p.Description</label></td>
+                        <td>
+                            <a class="btn btn-default btn-xs" href="@Url.Action("Edit",new { id = p.CategoryID })"
+                               title="Edit category">
+                                <i class="fa fa-edit text-info" style="font-size:22px;"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <button class="btn btn-default btn-xs delCategory" type="submit">
+                                <i class="fa fa-remove text-danger" style="font-size:22px;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".delCategory").click(function () {              
+                toastr.error("Product deleted!");
+            });
+        });       
+    </script>
+}
+

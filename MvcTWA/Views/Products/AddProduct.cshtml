@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Add Product";
+}
+@using MvcTWA.Models
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h1 class="text-center">Add New Product</h1>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <form class="form-group" action="@Url.Action("AddProduct")" method="POST"
+                  enctype="multipart/form-data">
+                <input class="form-control" type="text" name="ProductName" placeholder="Product Name" />
+                <br />
+                <input class="form-control" type="number" name="UnitPrice" placeholder="Price" />
+                <br />
+                <input class="form-control" type="number" name="UnitsInStock" placeholder="Stock" />
+                <br />
+                <input class="form-control" type="text" name="Supplier" placeholder="Supplier" />
+                <br />
+                <select class="form-control" name="CategoryID">
+                    <option selected disabled>
+                        Select Category
+                    </option>
+                    @foreach (Category cat in ViewBag.Categories)
+                    {
+                        <option value="@cat.CategoryID">
+                            @cat.CategoryName
+                        </option>
+                    }
+                </select>
+                <br />
+                <select class="form-control" name="SupplierID">
+                    <option selected disabled>
+                        Select Supplier
+                    </option>
+                    @foreach (Supplier cat in ViewBag.Suppliers)
+                    {
+                        <option value="@cat.SupplierID">
+                            @cat.CompanyName
+                        </option>
+                    }
+                </select>
+                <br />
+                <button class="btn btn-success" id="btnsave" type="submit">
+                    <i class="fa fa-save"></i>&nbsp;Save
+                </button>
+            </form>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <img class="img-responsive center-block"
+                 src="https://www.vskills.in/certification/blog/wp-content/uploads/2015/01/steps-to-ensure-an-effective-introduction-of-the-product.jpg"
+                 alt=".." />
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-block btn-default" href="@Url.Action("Index")">
+            <i class="fa fa-backward"></i>&nbsp;Back to Product List
+        </a>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#btnsave").click(function () {
+                toastr.success("Message", "Succesfully saved!");
+            });
+        });
+    </script>
+}
+

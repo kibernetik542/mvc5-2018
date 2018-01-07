@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "Suppliers";
+}
+
+@using MvcTWA.PagingFunctionality
+@model ProductListViewModel
+
+<div class="container">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Contact Name</th>
+                <th>Contact Title</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th>Fax</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>
+                    <a class="btn btn-default btn-sm" href="@Url.Action("AddSupplier")" title="Add Product">
+                        <i class="fa fa-plus-circle text-success" style="font-size:22px;"></i>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Suppliers)
+            {
+                <tr>
+                    <td><label class="label label-primary">@p.CompanyName</label></td>
+                    <td><b class="text-uppercase text-primary">@p.ContactName</b></td>
+                    <td><label class="label label-warning">@p.ContactTitle</label></td>
+                    <td><label class="label label-primary">@p.Address</label></td>
+                    <td><b class="text-uppercase text-danger">@p.City</b></td>
+                    @if (p.Region == null)
+                    {
+                        <td><label class="label label-danger">Not found</label></td>
+                    }
+                    else
+                    {
+                        <td>
+                            <label class="label label-success"> @p.Region</label>
+                        </td>
+                    }
+
+                    <td><b class="text-uppercase text-success">@p.Country</b></td>
+                    <td><label class="label label-success">@p.Phone</label></td>
+                    @if (p.Fax == null)
+                    {
+                        <td><label class="label label-danger">Not found</label></td>
+                    }
+                    else
+                    {
+                        <td><label class="label label-success">@p.Fax</label></td>
+                    }
+
+                    <td>
+                        <a class="btn btn-default btn-xs" href="@Url.Action("Edit",new { id = p.SupplierID })"
+                           title="Edit category">
+                            <i class="fa fa-edit text-info" style="font-size:22px;"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-xs openmodal" data-toggle="modal"
+           data-target="#myModal" data-companyname="@p.CompanyName" data-id="@p.SupplierID">
+                            <i class="fa fa-remove text-danger" style="font-size:22px;"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="btn-group pull-right">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new { page = x }))
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center text-danger">
+                        <b>Delete supplier!!!</b>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p class="message"></p>
+                    <p class="errorDetected"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger delSup" data-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".openmodal").click(function () {
+                var cName = $(this).data("companyname");
+                $(".modal-body>p.message")
+                    .html("Are you sure to delete " + cName + " ?");
+                
+                var id = $(this).data("id");
+                $(".delSup").data("id", id);
+            });
+
+            $(".delSup").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    type: "POST",
+                    url: "/Supplier/Delete/" + id,
+                    success: function (result) {
+                        if (result == "success") {                           
+                            window.location.replace("/Supplier/Index");
+                            toastr.success("Deleted succesfully");
+                        } else {
+                            $(".modal-body>p.message").remove();
+                            $(".modal-body>p.errorDetected")
+                                .html("You cannot delete this item!!")
+                                .css("color", "red")
+                                .css("text-transform", "uppercase"); 
+                            toastr.error("Oooops!11");
+                        }                       
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+
